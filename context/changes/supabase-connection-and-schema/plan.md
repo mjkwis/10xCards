@@ -313,14 +313,14 @@ This is a greenfield database — no existing data to migrate. The one asymmetry
 
 #### Automated
 
-- [x] 1.1 `npx supabase status` reports the local stack healthy
-- [x] 1.2 `npm run build` succeeds with `.env` populated
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx supabase status` reports the local stack healthy — 379e4ca
+- [x] 1.2 `npm run build` succeeds with `.env` populated — 379e4ca
+- [x] 1.3 `npm run lint` passes — 379e4ca
 
 #### Manual
 
-- [x] 1.4 Local signup/signin flow works (`npm run dev`)
-- [x] 1.5 Signup/signin flow works under `npm run preview` (Workers runtime)
+- [x] 1.4 Local signup/signin flow works (`npm run dev`) — 379e4ca
+- [x] 1.5 Signup/signin flow works under `npm run preview` (Workers runtime) — 379e4ca
 
 ### Phase 2: Flashcards Schema & RLS Migration
 
