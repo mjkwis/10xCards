@@ -326,10 +326,10 @@ This is a greenfield database — no existing data to migrate. The one asymmetry
 
 #### Automated
 
-- [ ] 2.1 `npx supabase db reset` applies the migration with no errors
-- [ ] 2.2 `npx supabase db push` succeeds against the linked live project
-- [ ] 2.3 `npm run build` succeeds (typed client compiles)
-- [ ] 2.4 `npm run lint` passes
+- [x] 2.1 `npx supabase db reset` applies the migration with no errors
+- [x] 2.2 `npx supabase db push` succeeds against the linked live project
+- [x] 2.3 `npm run build` succeeds (typed client compiles)
+- [x] 2.4 `npm run lint` passes
 
 #### Manual
 
