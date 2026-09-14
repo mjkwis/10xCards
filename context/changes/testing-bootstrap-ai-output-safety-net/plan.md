@@ -231,12 +231,12 @@ Not applicable — no data or schema changes.
 
 #### Automated
 
-- [ ] 2.1 npm run test -- src/lib/services/openrouter.test.ts passes all branches
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run test -- src/lib/services/openrouter.test.ts passes all branches
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 Test file reviewed against test-plan.md Risk #1 Response Guidance row — all four proof criteria covered
+- [x] 2.3 Test file reviewed against test-plan.md Risk #1 Response Guidance row — all four proof criteria covered
 
 ### Phase 3: Input-Length Guardrail + Error-Mapping Tests (Risk #5)
 
