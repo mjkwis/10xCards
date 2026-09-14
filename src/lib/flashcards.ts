@@ -11,7 +11,7 @@ export const flashcardSchema = z.object({
   updated_at: z.string(),
 });
 
-const SAVE_TIMEOUT_MS = 10_000;
+const REQUEST_TIMEOUT_MS = 10_000;
 
 export class FlashcardNotFoundError extends Error {}
 
@@ -19,7 +19,7 @@ export async function saveFlashcard(front: string, back: string, source: Flashca
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
-  }, SAVE_TIMEOUT_MS);
+  }, REQUEST_TIMEOUT_MS);
 
   try {
     const response = await fetch("/api/flashcards", {
@@ -43,7 +43,7 @@ export async function updateFlashcard(id: string, front: string, back: string): 
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
-  }, SAVE_TIMEOUT_MS);
+  }, REQUEST_TIMEOUT_MS);
 
   try {
     const response = await fetch(`/api/flashcards/${id}`, {
@@ -70,7 +70,7 @@ export async function deleteFlashcard(id: string): Promise<void> {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
-  }, SAVE_TIMEOUT_MS);
+  }, REQUEST_TIMEOUT_MS);
 
   try {
     const response = await fetch(`/api/flashcards/${id}`, {
