@@ -41,8 +41,8 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 
 | ID   | Change ID                          | Outcome (user can …)                                             | Prerequisites | PRD refs                      | Status   |
 | ---- | ---------------------------------- | ---------------------------------------------------------------- | ------------- | ----------------------------- | -------- |
-| F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | done |
-| S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done |
+| F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | done     |
+| S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done     |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | proposed |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | proposed |
 | S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | proposed |
