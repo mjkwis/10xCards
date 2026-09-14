@@ -1,7 +1,7 @@
 ---
 change_id: delete-flashcard-with-confirmation
 title: Delete flashcard with confirmation
-status: implementing
+status: implemented
 created: 2026-09-14
 updated: 2026-09-14
 ---
