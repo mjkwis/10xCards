@@ -9,14 +9,26 @@ interface CandidateCardProps {
   onRejected: () => void;
 }
 
+const SAVE_TIMEOUT_MS = 10_000;
+
 async function saveFlashcard(front: string, back: string, source: FlashcardSource) {
-  const response = await fetch("/api/flashcards", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ front, back, source }),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to save flashcard");
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, SAVE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch("/api/flashcards", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ front, back, source }),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to save flashcard");
+    }
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -78,10 +90,10 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
         {isEditing ? (
           <Button
             type="button"
+            variant="success"
             size="sm"
             disabled={isSaving}
             onClick={() => handleAccept("ai-edited")}
-            className="bg-green-500 text-black hover:bg-green-600"
           >
             Save edit
           </Button>
@@ -89,10 +101,10 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
           <>
             <Button
               type="button"
+              variant="success"
               size="sm"
               disabled={isSaving}
               onClick={() => handleAccept("ai-full")}
-              className="bg-green-500 text-black hover:bg-green-600"
             >
               Accept
             </Button>
@@ -104,20 +116,12 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
               onClick={() => {
                 setIsEditing(true);
               }}
-              className="bg-black text-white hover:bg-black/80"
             >
               Edit
             </Button>
           </>
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={isSaving}
-          onClick={onRejected}
-          className="bg-red-600 text-white hover:bg-red-700"
-        >
+        <Button type="button" variant="destructive" size="sm" disabled={isSaving} onClick={onRejected}>
           Reject
         </Button>
       </div>

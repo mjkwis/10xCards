@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase";
 
 const createFlashcardSchema = z.object({
-  front: z.string().min(1).max(200),
-  back: z.string().min(1).max(500),
+  front: z.string().trim().min(1).max(200),
+  back: z.string().trim().min(1).max(500),
   source: z.enum(["ai-full", "ai-edited", "manual"]),
 });
 

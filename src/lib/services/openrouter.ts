@@ -25,8 +25,8 @@ export class GenerationFailedError extends Error {
 }
 
 const candidateSchema = z.object({
-  front: z.string().min(1).max(FRONT_MAX_LENGTH),
-  back: z.string().min(1).max(BACK_MAX_LENGTH),
+  front: z.string().trim().min(1).max(FRONT_MAX_LENGTH),
+  back: z.string().trim().min(1).max(BACK_MAX_LENGTH),
 });
 
 const structuredResponseSchema = z.object({
