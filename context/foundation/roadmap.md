@@ -45,7 +45,7 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 | S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done     |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | done     |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | done     |
-| S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | in-progress |
+| S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | done |
 | S-05 | delete-flashcard-with-confirmation | usuwa fiszkę, z potwierdzeniem                                   | S-03          | FR-007                        | proposed |
 | S-06 | srs-review-session                 | uczy się fiszek w sesji z algorytmem powtórek (SRS)              | S-03          | FR-009                        | blocked  |
 
@@ -136,7 +136,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Zależy od widoku listy (S-03), by użytkownik miał z czego wybrać fiszkę do edycji; poza tym niskie ryzyko — to prosta operacja CRUD.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-05: Użytkownik usuwa fiszkę z potwierdzeniem
 
@@ -201,3 +201,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-01: zakłada konto i loguje się** — Archived 2026-09-14 → `context/archive/2026-09-14-working-signup-signin/`. Lesson: —.
 - **S-02: generuje i recenzuje fiszki AI (accept/edit/reject)** — Archived 2026-09-14 → `context/archive/2026-09-14-ai-flashcard-generation-review/`. Lesson: —.
 - **S-03: user can ręcznie utworzyć fiszkę (pytanie/odpowiedź) i zobaczyć ją na liście swojej kolekcji fiszek.** — Archived 2026-09-14 → `context/archive/2026-09-14-manual-flashcard-create-and-list/`. Lesson: —.
+- **S-04: user can edytować dowolną istniejącą fiszkę (utworzoną ręcznie lub przez AI) i zapisać zmiany.** — Archived 2026-09-14 → `context/archive/2026-09-14-edit-existing-flashcard/`. Lesson: —.
