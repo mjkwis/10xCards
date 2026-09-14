@@ -24,3 +24,8 @@ export interface CreateFlashcardCommand {
   back: string;
   source: FlashcardSource;
 }
+
+export interface UpdateFlashcardCommand {
+  front: string;
+  back: string;
+}

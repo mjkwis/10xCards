@@ -13,6 +13,8 @@ export const flashcardSchema = z.object({
 
 const SAVE_TIMEOUT_MS = 10_000;
 
+export class FlashcardNotFoundError extends Error {}
+
 export async function saveFlashcard(front: string, back: string, source: FlashcardSource): Promise<Flashcard> {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
@@ -30,6 +32,33 @@ export async function saveFlashcard(front: string, back: string, source: Flashca
     const parsed = flashcardSchema.safeParse(body);
     if (!response.ok || !parsed.success) {
       throw new Error("Failed to save flashcard");
+    }
+    return parsed.data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function updateFlashcard(id: string, front: string, back: string): Promise<Flashcard> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, SAVE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`/api/flashcards/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ front, back }),
+      signal: controller.signal,
+    });
+    if (response.status === 404) {
+      throw new FlashcardNotFoundError("Flashcard not found");
+    }
+    const body: unknown = await response.json().catch(() => null);
+    const parsed = flashcardSchema.safeParse(body);
+    if (!response.ok || !parsed.success) {
+      throw new Error("Failed to update flashcard");
     }
     return parsed.data;
   } finally {

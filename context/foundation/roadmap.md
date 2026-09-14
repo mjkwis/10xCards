@@ -45,7 +45,7 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 | S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done     |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | done     |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | done     |
-| S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | proposed |
+| S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | in-progress |
 | S-05 | delete-flashcard-with-confirmation | usuwa fiszkę, z potwierdzeniem                                   | S-03          | FR-007                        | proposed |
 | S-06 | srs-review-session                 | uczy się fiszek w sesji z algorytmem powtórek (SRS)              | S-03          | FR-009                        | blocked  |
 
@@ -136,7 +136,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Zależy od widoku listy (S-03), by użytkownik miał z czego wybrać fiszkę do edycji; poza tym niskie ryzyko — to prosta operacja CRUD.
-- **Status:** proposed
+- **Status:** in-progress
 
 ### S-05: Użytkownik usuwa fiszkę z potwierdzeniem
 
