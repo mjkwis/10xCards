@@ -90,6 +90,7 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
               type="button"
               variant="outline"
               size="sm"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
               disabled={isSaving}
               onClick={() => {
                 setIsEditing(true);

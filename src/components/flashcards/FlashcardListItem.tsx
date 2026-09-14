@@ -107,6 +107,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
               type="button"
               size="sm"
               variant="outline"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
               onClick={() => {
                 onNotFound(flashcard.id);
               }}
@@ -125,12 +126,25 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
             <Button type="button" variant="success" size="sm" disabled={isSaving || isUnchanged} onClick={handleSave}>
               Save
             </Button>
-            <Button type="button" variant="outline" size="sm" disabled={isSaving} onClick={cancelEditing}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
+              disabled={isSaving}
+              onClick={cancelEditing}
+            >
               Cancel
             </Button>
           </>
         ) : (
-          <Button type="button" variant="outline" size="sm" onClick={startEditing}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
+            onClick={startEditing}
+          >
             Edit
           </Button>
         )}
