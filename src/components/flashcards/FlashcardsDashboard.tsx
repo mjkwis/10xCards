@@ -74,7 +74,7 @@ export function FlashcardsDashboard({
 
   return (
     <>
-      <GenerateReviewIsland openRouterConfigured={openRouterConfigured} />
+      <GenerateReviewIsland openRouterConfigured={openRouterConfigured} onSaved={handleCardSaved} />
       <ManualCreateForm onCreated={handleCardSaved} />
       <div className="w-full max-w-2xl space-y-3">
         <h2 className="text-xl font-semibold text-white">Your flashcards</h2>

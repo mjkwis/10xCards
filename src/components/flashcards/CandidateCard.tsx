@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ServerError } from "@/components/auth/ServerError";
-import type { FlashcardCandidateDto, FlashcardSource } from "@/types";
+import type { Flashcard, FlashcardCandidateDto, FlashcardSource } from "@/types";
 
 interface CandidateCardProps {
   candidate: FlashcardCandidateDto;
-  onAccepted: () => void;
+  onAccepted: (flashcard: Flashcard) => void;
   onRejected: () => void;
 }
 
 const SAVE_TIMEOUT_MS = 10_000;
 
-async function saveFlashcard(front: string, back: string, source: FlashcardSource) {
+async function saveFlashcard(front: string, back: string, source: FlashcardSource): Promise<Flashcard> {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
@@ -27,6 +27,7 @@ async function saveFlashcard(front: string, back: string, source: FlashcardSourc
     if (!response.ok) {
       throw new Error("Failed to save flashcard");
     }
+    return (await response.json()) as Flashcard;
   } finally {
     clearTimeout(timeout);
   }
@@ -43,8 +44,8 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
     setIsSaving(true);
     setError(null);
     try {
-      await saveFlashcard(front, back, source);
-      onAccepted();
+      const flashcard = await saveFlashcard(front, back, source);
+      onAccepted(flashcard);
     } catch {
       setError("Couldn't save this flashcard. Please try again.");
     } finally {

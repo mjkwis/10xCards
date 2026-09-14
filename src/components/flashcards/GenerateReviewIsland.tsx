@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ServerError } from "@/components/auth/ServerError";
 import { GenerationError } from "@/components/flashcards/GenerationError";
 import { CandidateCard } from "@/components/flashcards/CandidateCard";
-import type { FlashcardCandidateDto } from "@/types";
+import type { Flashcard, FlashcardCandidateDto } from "@/types";
 
 const MAX_SOURCE_TEXT_LENGTH = 5000;
 
@@ -18,6 +18,7 @@ const errorResponseSchema = z.object({
 
 interface GenerateReviewIslandProps {
   openRouterConfigured: boolean;
+  onSaved: (flashcard: Flashcard) => void;
 }
 
 interface Candidate extends FlashcardCandidateDto {
@@ -28,7 +29,7 @@ function createId() {
   return crypto.randomUUID();
 }
 
-export function GenerateReviewIsland({ openRouterConfigured }: GenerateReviewIslandProps) {
+export function GenerateReviewIsland({ openRouterConfigured, onSaved }: GenerateReviewIslandProps) {
   const [sourceText, setSourceText] = useState("");
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [generationState, setGenerationState] = useState<"idle" | "generating" | "error">("idle");
@@ -104,7 +105,8 @@ export function GenerateReviewIsland({ openRouterConfigured }: GenerateReviewIsl
             <CandidateCard
               key={candidate.id}
               candidate={candidate}
-              onAccepted={() => {
+              onAccepted={(flashcard) => {
+                onSaved(flashcard);
                 removeCandidate(candidate.id);
               }}
               onRejected={() => {

@@ -248,28 +248,28 @@ No schema changes — the `flashcards` table, RLS policies, and check constraint
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run build`
-- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npm run build` — da38523
+- [x] 2.2 Linting passes: `npm run lint` — da38523
 
 #### Manual
 
-- [x] 2.3 Submitting a valid front/back creates a flashcard that appears at the top of the list instantly, with a "Manual" badge
-- [x] 2.4 The form clears and stays visible after a successful save
-- [x] 2.5 Refreshing the page shows the newly created card persisted
-- [x] 2.6 Submit is disabled when front or back is empty; length limits enforced
-- [x] 2.7 A forced save failure shows the inline error message and leaves typed text intact
+- [x] 2.3 Submitting a valid front/back creates a flashcard that appears at the top of the list instantly, with a "Manual" badge — da38523
+- [x] 2.4 The form clears and stays visible after a successful save — da38523
+- [x] 2.5 Refreshing the page shows the newly created card persisted — da38523
+- [x] 2.6 Submit is disabled when front or back is empty; length limits enforced — da38523
+- [x] 2.7 A forced save failure shows the inline error message and leaves typed text intact — da38523
 
 ### Phase 3: AI-Accept Sync
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run build`
-- [ ] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run build`
+- [x] 3.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 Accepting an AI candidate makes it appear at the top of the list instantly, with an "AI" badge
-- [ ] 3.4 Editing a candidate before accepting shows the edited text in the list
-- [ ] 3.5 Rejecting a candidate never adds anything to the list
-- [ ] 3.6 Refreshing the page shows the AI-accepted card persisted
-- [ ] 3.7 Full end-to-end regression: manual create + AI accept both update the same list, newest-first order preserved
+- [x] 3.3 Accepting an AI candidate makes it appear at the top of the list instantly, with an "AI" badge
+- [x] 3.4 Editing a candidate before accepting shows the edited text in the list
+- [x] 3.5 Rejecting a candidate never adds anything to the list
+- [x] 3.6 Refreshing the page shows the AI-accepted card persisted
+- [x] 3.7 Full end-to-end regression: manual create + AI accept both update the same list, newest-first order preserved
