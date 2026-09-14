@@ -326,21 +326,21 @@ This is a greenfield database — no existing data to migrate. The one asymmetry
 
 #### Automated
 
-- [x] 2.1 `npx supabase db reset` applies the migration with no errors
-- [x] 2.2 `npx supabase db push` succeeds against the linked live project
-- [x] 2.3 `npm run build` succeeds (typed client compiles)
-- [x] 2.4 `npm run lint` passes
+- [x] 2.1 `npx supabase db reset` applies the migration with no errors — cbdbeae
+- [x] 2.2 `npx supabase db push` succeeds against the linked live project — cbdbeae
+- [x] 2.3 `npm run build` succeeds (typed client compiles) — cbdbeae
+- [x] 2.4 `npm run lint` passes — cbdbeae
 
 #### Manual
 
-- [ ] 2.5 Cross-user RLS check passes locally (Supabase Studio)
-- [ ] 2.6 `updated_at` trigger fires on update
+- [x] 2.5 Cross-user RLS check passes locally (Supabase Studio) — cbdbeae
+- [x] 2.6 `updated_at` trigger fires on update — cbdbeae
 
 ### Phase 3: Cross-Environment Verification & Docs
 
 #### Automated
 
-- [ ] 3.1 `npx wrangler versions upload` completes without error
+- [x] 3.1 `npx wrangler versions upload` completes without error
 
 #### Manual
 

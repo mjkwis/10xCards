@@ -48,6 +48,12 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 - **Services/helpers** go in `src/lib/` (or `src/lib/services/` for extracted business logic).
 - **Shared types** (entities, DTOs) go in `src/types.ts`.
 
+### Git rules for agents
+
+- **Never stage or commit anything under `.claude/`.** The user tracks that scaffolding (skills, prompts, manifest) separately from `context/changes/<change-id>` work. This holds even when `.claude/` files show up already staged/dirty alongside a change's own files (e.g. during `/10x-implement`'s phase-end commit ritual) — treat `.claude/**` as permanently out of scope for implementation commits.
+  - **Technical gotcha**: if `.claude/` files are already staged in the index, a plain `git add <intended files>` followed by `git commit` will still sweep in everything already staged, including `.claude/`. Use the pathspec form instead — `git commit -m "..." -- <intended files>` — which commits only those paths regardless of what else is staged, and leaves the rest of the index untouched. Always verify with `git show --stat HEAD` after committing that only the intended files landed.
+- **Never unilaterally run corrective git history operations** (`reset`, `amend`, force-push, etc.) to fix a mistake — including your own. If a commit went wrong, stop, explain exactly what happened, and ask before touching git state again.
+
 ### Environment
 
 - Node.js v22.14.0 (see `.nvmrc`)
