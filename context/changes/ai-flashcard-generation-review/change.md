@@ -1,7 +1,7 @@
 ---
 change_id: ai-flashcard-generation-review
 title: AI flashcard generation with accept/edit/reject (north star)
-status: implementing
+status: implemented
 created: 2026-09-14
 updated: 2026-09-14
 ---

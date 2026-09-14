@@ -305,13 +305,13 @@ No schema changes — the existing `flashcards` migration already supports this 
 
 #### Automated
 
-- [x] 3.1 Linting passes: `npm run lint`
-- [x] 3.2 Build passes: `npm run build`
-- [ ] 3.3 CI workflow passes on push
+- [x] 3.1 Linting passes: `npm run lint` — 4441eba
+- [x] 3.2 Build passes: `npm run build` — 4441eba
+- [x] 3.3 CI workflow passes on push — 4441eba
 
 #### Manual
 
-- [x] 3.4 Missing OPENROUTER_API_KEY shows a scoped notice on the dashboard only (not on sign-in/sign-up)
-- [x] 3.5 "Generating…" state appears effectively instantly and persists past ~2s without a blank screen
-- [x] 3.6 Broken OpenRouter response shows inline error + "Try again", not a raw platform error
-- [x] 3.7 `wrangler secret put OPENROUTER_API_KEY` run before first relevant production deploy
+- [x] 3.4 Missing OPENROUTER_API_KEY shows a scoped notice on the dashboard only (not on sign-in/sign-up) — 4441eba
+- [x] 3.5 "Generating…" state appears effectively instantly and persists past ~2s without a blank screen — 4441eba
+- [x] 3.6 Broken OpenRouter response shows inline error + "Try again", not a raw platform error — 4441eba
+- [x] 3.7 `wrangler secret put OPENROUTER_API_KEY` run before first relevant production deploy — 4441eba
