@@ -1,7 +1,7 @@
 ---
 change_id: supabase-connection-and-schema
 title: Connect live Supabase project and add minimal flashcards schema
-status: implemented
+status: impl_reviewed
 created: 2026-09-12
 updated: 2026-09-14
 archived_at: null
