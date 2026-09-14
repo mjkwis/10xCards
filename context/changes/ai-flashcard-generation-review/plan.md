@@ -27,7 +27,8 @@ Verify by: pasting real documentation/Stack-Overflow-style text on `/dashboard`,
 - `flashcards.source` is already constrained to `'ai-full' | 'ai-edited' | 'manual'` and `front`/`back` already have `char_length` check constraints (200/500) — the generation service must respect these same bounds so accepted rows never violate the DB constraint.
 - There is no candidates/proposals table — proposals are meant to live only in UI state until accepted (confirmed with the user; matches what the schema already implies).
 - `infrastructure.md`'s risk register already names the exact risk this plan must mitigate: a slow LLM call can trip Cloudflare Workers' subrequest/request timeout and surface as an opaque platform error instead of the PRD-required progress/error UX.
-- `src/lib/config-status.ts` + `src/layouts/Layout.astro` already have a working pattern for surfacing missing configuration (Supabase) as an error banner — adding an OpenRouter entry to `configStatuses` is enough to reuse it, no template changes needed.
+- `src/lib/config-status.ts` + `src/layouts/Layout.astro` already have a working pattern for surfacing missing configuration (Supabase) as an error banner — but `Layout.astro` is shared by `dashboard.astro` **and** the public `auth/signin.astro`/`auth/signup.astro` pages, so reusing `configStatuses` for OpenRouter would show an "OpenRouter not configured" banner to logged-out visitors too. OpenRouter's missing-config notice is scoped to `dashboard.astro` directly instead (see Phase 3).
+- `prd.md`'s privacy guardrail requires that pasted content (which may contain code/company documents) "must not leak or be used outside the user's context." Since this content is sent verbatim to a third-party LLM via OpenRouter, the OpenRouter request must restrict routing to zero-data-retention (ZDR) providers, and prompt logging must be disabled at the OpenRouter account level — this is a hard requirement of the service, not a nice-to-have.
 
 ## What We're NOT Doing
 
@@ -42,13 +43,17 @@ Verify by: pasting real documentation/Stack-Overflow-style text on `/dashboard`,
 
 ## Implementation Approach
 
-Add a small `src/lib/services/openrouter.ts` service that owns the OpenRouter call, prompt, structured-output request, and zod validation, keeping `src/pages/api/flashcards/generate.ts` thin. Reuse the existing `src/lib/config-status.ts` / `Banner.astro` pattern for missing-config visibility, and the existing auth-forms' visual language (`ServerError.tsx`) for the review UI's error state. The review flow is a single React island on `dashboard.astro` holding candidates in local state; accepting a candidate calls a new minimal `POST /api/flashcards` endpoint that writes one row via the authenticated Supabase client (RLS-enforced).
+Add a small `src/lib/services/openrouter.ts` service that owns the OpenRouter call, prompt, structured-output request, and zod validation, keeping `src/pages/api/flashcards/generate.ts` thin. Surface missing OpenRouter config with a notice scoped to `dashboard.astro` (not the shared `configStatuses`/`Layout.astro` pattern used for Supabase — see Phase 3, item 1), and reuse the existing auth-forms' visual language (`ServerError.tsx`) for the review UI's error state. The review flow is a single React island on `dashboard.astro` holding candidates in local state; accepting a candidate calls a new minimal `POST /api/flashcards` endpoint that writes one row via the authenticated Supabase client (RLS-enforced).
 
 ## Critical Implementation Details
 
 ### Timing & lifecycle: two different "timeouts"
 
-The Workers subrequest-timeout risk (`infrastructure.md`) is mitigated in the **service**, not the browser. `src/lib/services/openrouter.ts` must wrap its `fetch` call to OpenRouter in an `AbortController` with an explicit timeout clearly shorter than Cloudflare's platform request limit for the deployed plan (confirm the current exact limit against Cloudflare's docs at implementation time; start from a conservative value such as 20s). If this fires, the service throws a typed error the route maps to a clean JSON error response — this is what actually prevents the "opaque platform error" failure mode, not anything done in the browser. The browser-side fetch (from the React island to `/api/flashcards/generate`) only needs to handle *that* JSON error response and show the inline "Try again" UI; it does not need its own separate abort timeout to satisfy the NFR.
+The Workers subrequest-timeout risk (`infrastructure.md`) is mitigated in the **service**, not the browser. `src/lib/services/openrouter.ts` must wrap its `fetch` call to OpenRouter in an `AbortController` with an explicit timeout of `20000` ms (`DEFAULT_TIMEOUT_MS = 20_000` — a conservative value clearly under Cloudflare's platform request limit for typical Workers plans; revisit this constant if a specific deployed plan's documented limit turns out to be tighter). If this fires, the service throws a typed error the route maps to a clean JSON error response — this is what actually prevents the "opaque platform error" failure mode, not anything done in the browser. The browser-side fetch (from the React island to `/api/flashcards/generate`) only needs to handle *that* JSON error response and show the inline "Try again" UI; it does not need its own separate abort timeout to satisfy the NFR.
+
+### Data privacy: pasted content must not leave the user's context
+
+`prd.md`'s privacy guardrail requires that pasted text (which may include code or company documents) never leak or get used outside the user's context. Because the OpenRouter API call is the only place this content leaves our infrastructure, `src/lib/services/openrouter.ts` must set OpenRouter's `provider` request field to restrict routing to zero-data-retention (ZDR) providers only (confirm the exact current field/value against OpenRouter's live API docs at implementation time — the ZDR-routing concept is stable on their platform, but the request shape may shift), and prompt/completion logging must be turned off in the OpenRouter account dashboard before the first real request is sent. This is a correctness requirement for the guardrail, not an optional hardening step — treat it the same as the timeout requirement above.
 
 ### Auth boundary: API routes are not covered by `PROTECTED_ROUTES`
 
@@ -76,7 +81,7 @@ Add the OpenRouter service, its configuration, and the `POST /api/flashcards/gen
 
 **Intent**: Make the OpenRouter API key and model id available server-side, following the exact pattern already used for `SUPABASE_URL`/`SUPABASE_KEY`.
 
-**Contract**: Add `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to `env.schema`, both `envField.string({ context: "server", access: "secret", optional: true })`. `OPENROUTER_MODEL` being unset falls back to a hardcoded default model constant in the service (pick a current, cost-effective OpenRouter model — confirm against OpenRouter's live catalog/pricing at implementation time, since model availability changes).
+**Contract**: Add `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to `env.schema`, both `envField.string({ context: "server", access: "secret", optional: true })`. `OPENROUTER_MODEL` being unset falls back to a hardcoded default in the service: `DEFAULT_MODEL = "openai/gpt-4o-mini"` (cost-effective, widely available on OpenRouter, and supports JSON-schema structured output — treat as a revisable constant, not a permanent choice, since OpenRouter's catalog/pricing changes over time).
 
 #### 3. Shared types
 
@@ -92,7 +97,7 @@ Add the OpenRouter service, its configuration, and the `POST /api/flashcards/gen
 
 **Intent**: Own the OpenRouter call end-to-end — prompt construction, structured-output request, timeout, and response validation — so the API route stays thin.
 
-**Contract**: Export `generateFlashcardCandidates(sourceText: string): Promise<FlashcardCandidateDto[]>`. Calls OpenRouter's chat completions endpoint with `response_format` set to a JSON-schema structured output (array of `{front, back}`, front ≤200 chars, back ≤500 chars, max 10 items — mirroring the DB check constraints), `max_tokens` capped (e.g. ~2048, sized for up to 10 cards plus JSON overhead), and the `AbortController` timeout described in Critical Implementation Details. Validates the parsed response with a zod schema before returning; throws a typed error (e.g. `GenerationTimeoutError` / `GenerationFailedError`) on timeout, HTTP failure, or schema-invalid response.
+**Contract**: Export `generateFlashcardCandidates(sourceText: string): Promise<FlashcardCandidateDto[]>`. Calls OpenRouter's chat completions endpoint with `response_format` set to a JSON-schema structured output (array of `{front, back}`, front ≤200 chars, back ≤500 chars, max 10 items — mirroring the DB check constraints), `provider` restricted to zero-data-retention providers only (see Critical Implementation Details — Data privacy), `max_tokens` capped (e.g. ~2048, sized for up to 10 cards plus JSON overhead), and the `AbortController` timeout described in Critical Implementation Details. Parses the top-level response shape (must be an array) with zod, then validates each candidate **individually** — a candidate failing its own `front`/`back` length check (or the array exceeding 10 items) is dropped, not treated as a whole-batch failure; only throws `GenerationFailedError` if zero candidates survive validation. Throws `GenerationTimeoutError` on timeout, `GenerationFailedError` on HTTP failure or an unparseable/non-array top-level response.
 
 #### 5. Generate API route
 
@@ -115,6 +120,8 @@ Add the OpenRouter service, its configuration, and the `POST /api/flashcards/gen
 - Text over 5,000 characters is rejected with `400`.
 - An unauthenticated request (no session) returns `401`.
 - A deliberately broken config (e.g. invalid `OPENROUTER_MODEL`) results in a clean JSON error response, not an opaque platform/server error.
+- The OpenRouter request body includes the zero-data-retention `provider` restriction, and prompt logging is confirmed off in the OpenRouter account dashboard before any real source text is sent.
+- A response containing one schema-invalid candidate (e.g. a `front` over 200 chars) still returns the remaining valid candidates rather than failing the whole request; a response where every candidate is invalid returns a clean error.
 
 ---
 
@@ -164,7 +171,7 @@ Give the user a way to trigger generation and review each candidate, and persist
 
 **Intent**: Make the review flow reachable — this is the only authenticated page today, so it hosts the island directly rather than introducing a new route.
 
-**Contract**: Mount `<GenerateReviewIsland client:load />` on the dashboard, alongside (or replacing) the current placeholder content.
+**Contract**: Mount `<GenerateReviewIsland client:load />` on the dashboard, alongside (or replacing) the current placeholder content. `dashboard.astro` reads `Boolean(OPENROUTER_API_KEY)` server-side and passes it as an `openRouterConfigured` prop; when `false`, the island renders a scoped "AI generation isn't configured yet" notice instead of the paste form (see Phase 3, item 1 — this notice is intentionally separate from the shared `configStatuses`/`Layout.astro` Supabase banner, since that banner also renders on the public sign-in/sign-up pages).
 
 ### Success Criteria:
 
@@ -191,21 +198,21 @@ Make missing OpenRouter configuration visible the same way missing Supabase conf
 
 ### Changes Required:
 
-#### 1. Config status
+#### 1. Config status (scoped to the dashboard, not the global banner)
 
-**File**: `src/lib/config-status.ts`
+**File**: `src/pages/dashboard.astro`, `src/components/flashcards/GenerateReviewIsland.tsx`
 
-**Intent**: Surface an unconfigured `OPENROUTER_API_KEY` the same way Supabase is surfaced today, reusing the existing `Layout.astro`/`Banner.astro` wiring with no template changes needed.
+**Intent**: Surface an unconfigured `OPENROUTER_API_KEY` to the user — but *not* via `src/lib/config-status.ts`/`Layout.astro`, since that wiring is shared by the public `auth/signin.astro` and `auth/signup.astro` pages and would show an irrelevant "OpenRouter not configured" banner to logged-out visitors (plan review F2). `configStatuses` continues to cover Supabase only.
 
-**Contract**: Add an `"OpenRouter"` entry to `configStatuses`, `configured: Boolean(OPENROUTER_API_KEY)`.
+**Contract**: `dashboard.astro` computes `const openRouterConfigured = Boolean(OPENROUTER_API_KEY)` (imported from `astro:env/server`) and passes it to `GenerateReviewIsland` as a prop. When `false`, the island renders an inline "AI generation isn't configured yet" notice (reusing the `ServerError.tsx` visual pattern) instead of the paste form.
 
 #### 2. Local env documentation
 
-**File**: `.env.example` (and/or `.dev.vars` guidance, matching CLAUDE.md's existing Node/Cloudflare split)
+**File**: `.env.example` (does not exist yet — despite CLAUDE.md's Environment section referencing it, `Glob` confirms no such file is currently in the repo)
 
-**Intent**: Document the new secret so local setup matches the existing `SUPABASE_URL`/`SUPABASE_KEY` pattern.
+**Intent**: Create the env-setup entry point CLAUDE.md already documents, so local setup for *all* current env vars (not just the new one) matches what's described.
 
-**Contract**: Add `OPENROUTER_API_KEY=` (and `OPENROUTER_MODEL=` if set) with a short comment pointing to where to obtain a key.
+**Contract**: Create `.env.example` documenting `SUPABASE_URL=`, `SUPABASE_KEY=`, `OPENROUTER_API_KEY=`, and `OPENROUTER_MODEL=` (all with short comments, `OPENROUTER_MODEL`'s noting it's optional with a hardcoded fallback), matching the vars declared in `astro.config.mjs`'s `env.schema`.
 
 ### Success Criteria:
 
@@ -217,7 +224,7 @@ Make missing OpenRouter configuration visible the same way missing Supabase conf
 
 #### Manual Verification:
 
-- With `OPENROUTER_API_KEY` unset, the dashboard shows an error banner for OpenRouter (mirroring the existing Supabase one).
+- With `OPENROUTER_API_KEY` unset, the dashboard shows its own scoped "AI generation isn't configured yet" notice (not the shared Supabase banner), and the sign-in/sign-up pages show no OpenRouter-related banner at all.
 - Submitting a generation request shows the "Generating…" state effectively instantly, and it remains visible (not a blank screen) if the call runs past ~2s.
 - With a deliberately slow/broken OpenRouter response (e.g. wrong model id), the app shows the inline error + "Try again" UI rather than a raw platform error.
 - `wrangler secret put OPENROUTER_API_KEY` is run before the first production deploy that relies on this feature (mirrors the existing Supabase secrets flow in `infrastructure.md`).
@@ -276,6 +283,8 @@ No schema changes — the existing `flashcards` migration already supports this 
 - [ ] 1.4 Text over 5,000 characters is rejected with 400
 - [ ] 1.5 Unauthenticated request returns 401
 - [ ] 1.6 Broken config results in a clean JSON error, not an opaque platform error
+- [ ] 1.7 OpenRouter request restricts routing to zero-data-retention providers and account-level prompt logging is confirmed off
+- [ ] 1.8 One invalid candidate in the response doesn't fail the whole batch; all-invalid returns a clean error
 
 ### Phase 2: Review UI & accept persistence
 
@@ -302,7 +311,7 @@ No schema changes — the existing `flashcards` migration already supports this 
 
 #### Manual
 
-- [ ] 3.4 Missing OPENROUTER_API_KEY shows an error banner on the dashboard
+- [ ] 3.4 Missing OPENROUTER_API_KEY shows a scoped notice on the dashboard only (not on sign-in/sign-up)
 - [ ] 3.5 "Generating…" state appears effectively instantly and persists past ~2s without a blank screen
 - [ ] 3.6 Broken OpenRouter response shows inline error + "Try again", not a raw platform error
 - [ ] 3.7 `wrangler secret put OPENROUTER_API_KEY` run before first relevant production deploy

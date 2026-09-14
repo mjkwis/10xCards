@@ -27,6 +27,7 @@ A logged-in user pastes up to 5,000 characters on the dashboard, clicks generate
 | Progress UX (NFR) | Non-streaming call + client-side spinner set synchronously on submit | Satisfies the ≤200ms-ack / visible-progress-past-2s NFR without streaming infra. | Plan |
 | Candidate persistence | Client-side state only until accepted | Matches the existing `flashcards` schema, which has no candidates/proposals table. | Plan |
 | Cost guardrail | `max_tokens` cap on the LLM response | Cheap, direct bound on cost per call; rate limiting is overkill at `target_scale.users: small`. | Plan |
+| Data privacy | Restrict OpenRouter routing to zero-data-retention providers + disable prompt logging | Enforces the PRD's "pasted content must not leak or be used outside the user's context" guardrail (plan review F1). | Plan review |
 
 ## Scope
 
@@ -41,7 +42,7 @@ A logged-in user pastes up to 5,000 characters on the dashboard, clicks generate
 
 ## Architecture / Approach
 
-A new `src/lib/services/openrouter.ts` owns the OpenRouter call (prompt, structured output, timeout, zod validation), keeping the API route thin. A single React island (`GenerateReviewIsland`) on `dashboard.astro` holds candidates in local state; each accept/edit calls `POST /api/flashcards` to write one row via the authenticated Supabase client (RLS-scoped). Missing config reuses the existing `config-status.ts` → `Banner.astro` wiring already built for Supabase.
+A new `src/lib/services/openrouter.ts` owns the OpenRouter call (prompt, structured output, timeout, zod validation, zero-data-retention provider restriction), keeping the API route thin. A single React island (`GenerateReviewIsland`) on `dashboard.astro` holds candidates in local state; each accept/edit calls `POST /api/flashcards` to write one row via the authenticated Supabase client (RLS-scoped). Missing OpenRouter config is surfaced with a dashboard-scoped notice, not the shared `config-status.ts` → `Banner.astro` wiring (that stays Supabase-only, since it also renders on the public sign-in/sign-up pages).
 
 ## Phases at a Glance
 
@@ -56,8 +57,8 @@ A new `src/lib/services/openrouter.ts` owns the OpenRouter call (prompt, structu
 
 ## Open Risks & Assumptions
 
-- The exact current Cloudflare Workers subrequest/request timeout value isn't verified in this plan — the implementer should confirm it against Cloudflare's docs before finalizing the service's timeout constant.
-- The default OpenRouter model id is left as an implementation-time choice — the catalog/pricing should be checked fresh rather than hardcoding a possibly-stale model slug.
+- The exact OpenRouter API field/value for restricting to zero-data-retention providers isn't verified in this plan — the implementer should confirm the current request shape against OpenRouter's live docs, and check whether the restriction can silently fall back to a non-ZDR provider.
+- Default constants are now pinned in the plan (`DEFAULT_TIMEOUT_MS = 20_000`, `DEFAULT_MODEL = "openai/gpt-4o-mini"`) but both are explicitly revisable — reconfirm the timeout against Cloudflare's current documented limit and the model against OpenRouter's live catalog/pricing before relying on them long-term.
 - Assumes a single shared server-side OpenRouter key is fine (matches the app's flat, single-tenant-like auth model per the PRD) rather than per-user keys.
 
 ## Success Criteria (Summary)
