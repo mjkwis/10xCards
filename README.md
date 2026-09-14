@@ -139,12 +139,11 @@ Users can then sign in immediately after sign-up without clicking a confirmation
 
 ### Auth routes
 
-| Route                 | Description                                                             |
-| --------------------- | ----------------------------------------------------------------------- |
-| `/auth/signin`        | Email/password sign-in form                                             |
-| `/auth/signup`        | Email/password sign-up form                                             |
-| `/auth/confirm-email` | Post-signup "check your inbox" page                                     |
-| `/dashboard`          | Example protected page (redirects to `/auth/signin` if unauthenticated) |
+| Route          | Description                                                             |
+| -------------- | ----------------------------------------------------------------------- |
+| `/auth/signin` | Email/password sign-in form                                             |
+| `/auth/signup` | Email/password sign-up form                                             |
+| `/dashboard`   | Example protected page (redirects to `/auth/signin` if unauthenticated) |
 
 Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication. The middleware also redirects `/` based on auth state (signed in → `/dashboard`, signed out → `/auth/signin`), and redirects an already-authenticated user away from `/auth/signin` and `/auth/signup` to `/dashboard`.
 

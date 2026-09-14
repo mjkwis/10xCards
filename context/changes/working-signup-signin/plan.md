@@ -179,24 +179,24 @@ Not applicable — no data model changes.
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes
-- [x] 1.2 `npm run build` succeeds
+- [x] 1.1 `npm run lint` passes — 613ffbe
+- [x] 1.2 `npm run build` succeeds — 613ffbe
 
 #### Manual
 
-- [ ] 1.3 Visiting `/` while signed out redirects to `/auth/signin`
-- [ ] 1.4 Visiting `/` while signed in redirects to `/dashboard`
-- [ ] 1.5 Visiting `/auth/signin` or `/auth/signup` while signed in redirects to `/dashboard`
-- [ ] 1.6 `/auth/signin` and `/auth/signup` remain reachable and functional while signed out
+- [x] 1.3 Visiting `/` while signed out redirects to `/auth/signin` — 613ffbe
+- [x] 1.4 Visiting `/` while signed in redirects to `/dashboard` — 613ffbe
+- [x] 1.5 Visiting `/auth/signin` or `/auth/signup` while signed in redirects to `/dashboard` — 613ffbe
+- [x] 1.6 `/auth/signin` and `/auth/signup` remain reachable and functional while signed out — 613ffbe
 
 ### Phase 2: Simplify Post-Signup Flow
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 `npm run build` succeeds
 
 #### Manual
 
-- [ ] 2.3 Signing up with a new throwaway email lands directly on `/dashboard`, showing that account's email
-- [ ] 2.4 No route in the app links to or references `/auth/confirm-email` anymore
+- [x] 2.3 Signing up with a new throwaway email lands directly on `/dashboard`, showing that account's email
+- [x] 2.4 No route in the app links to or references `/auth/confirm-email` anymore

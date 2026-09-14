@@ -33,7 +33,7 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 - `src/middleware.ts` — runs on every request, resolves the current user, attaches to `context.locals.user`. Redirects unauthenticated users away from routes listed in `PROTECTED_ROUTES`.
 - `src/lib/config-status.ts` — reports whether Supabase is configured; the app runs (with auth disabled) even without env vars set, since the schema fields are optional.
 - API endpoints: `src/pages/api/auth/{signin,signup,signout}.ts`
-- Auth pages: `src/pages/auth/{signin,signup,confirm-email}.astro`
+- Auth pages: `src/pages/auth/{signin,signup}.astro`
 - Protected page example: `src/pages/dashboard.astro`
 
 ### Key conventions
