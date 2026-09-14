@@ -263,13 +263,13 @@ No schema changes — the `flashcards` table, RLS policies, and check constraint
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run build`
-- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run build` — 7e49604
+- [x] 3.2 Linting passes: `npm run lint` — 7e49604
 
 #### Manual
 
-- [x] 3.3 Accepting an AI candidate makes it appear at the top of the list instantly, with an "AI" badge
-- [x] 3.4 Editing a candidate before accepting shows the edited text in the list
-- [x] 3.5 Rejecting a candidate never adds anything to the list
-- [x] 3.6 Refreshing the page shows the AI-accepted card persisted
-- [x] 3.7 Full end-to-end regression: manual create + AI accept both update the same list, newest-first order preserved
+- [x] 3.3 Accepting an AI candidate makes it appear at the top of the list instantly, with an "AI" badge — 7e49604
+- [x] 3.4 Editing a candidate before accepting shows the edited text in the list — 7e49604
+- [x] 3.5 Rejecting a candidate never adds anything to the list — 7e49604
+- [x] 3.6 Refreshing the page shows the AI-accepted card persisted — 7e49604
+- [x] 3.7 Full end-to-end regression: manual create + AI accept both update the same list, newest-first order preserved — 7e49604

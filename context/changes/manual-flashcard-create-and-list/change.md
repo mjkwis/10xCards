@@ -1,7 +1,7 @@
 ---
 change_id: manual-flashcard-create-and-list
 title: Manual flashcard create + list view
-status: implementing
+status: implemented
 created: 2026-09-14
 updated: 2026-09-14
 ---
