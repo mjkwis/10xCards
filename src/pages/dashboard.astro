@@ -1,10 +1,30 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { GenerateReviewIsland } from "@/components/flashcards/GenerateReviewIsland";
+import { FlashcardsDashboard } from "@/components/flashcards/FlashcardsDashboard";
+import { createClient } from "@/lib/supabase";
 import { OPENROUTER_API_KEY } from "astro:env/server";
+import type { Flashcard } from "@/types";
 
 const { user } = Astro.locals;
 const openRouterConfigured = Boolean(OPENROUTER_API_KEY);
+
+let initialFlashcards: Flashcard[] = [];
+let initialError = "";
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  initialError = "Supabase is not configured";
+} else {
+  const { data, error } = await supabase
+    .from("flashcards")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+  if (error) {
+    initialError = "Failed to load flashcards";
+  } else {
+    initialFlashcards = data as Flashcard[];
+  }
+}
 ---
 
 <Layout title="Dashboard">
@@ -25,6 +45,11 @@ const openRouterConfigured = Boolean(OPENROUTER_API_KEY);
         </button>
       </form>
     </div>
-    <GenerateReviewIsland openRouterConfigured={openRouterConfigured} client:load />
+    <FlashcardsDashboard
+      openRouterConfigured={openRouterConfigured}
+      initialFlashcards={initialFlashcards}
+      initialError={initialError}
+      client:load
+    />
   </div>
 </Layout>

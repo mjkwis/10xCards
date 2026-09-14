@@ -8,6 +8,29 @@ const createFlashcardSchema = z.object({
   source: z.enum(["ai-full", "ai-edited", "manual"]),
 });
 
+export const GET: APIRoute = async (context) => {
+  if (!context.locals.user) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return Response.json({ error: "Supabase is not configured" }, { status: 502 });
+  }
+
+  const { data, error } = await supabase
+    .from("flashcards")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+
+  if (error) {
+    return Response.json({ error: "Failed to load flashcards" }, { status: 502 });
+  }
+
+  return Response.json(data, { status: 200 });
+};
+
 export const POST: APIRoute = async (context) => {
   if (!context.locals.user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
