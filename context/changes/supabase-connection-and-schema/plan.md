@@ -340,9 +340,9 @@ This is a greenfield database — no existing data to migrate. The one asymmetry
 
 #### Automated
 
-- [x] 3.1 `npx wrangler versions upload` completes without error
+- [x] 3.1 `npx wrangler versions upload` completes without error — 34d0f65
 
 #### Manual
 
-- [ ] 3.2 Full signup/signin flow works against the Cloudflare preview URL
-- [ ] 3.3 Cross-user RLS check passes against the live project via the preview URL
+- [x] 3.2 Full signup/signin flow works against the Cloudflare preview URL
+- [x] 3.3 Cross-user RLS check passes against the live project via the preview URL
