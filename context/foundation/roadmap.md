@@ -41,7 +41,7 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 
 | ID   | Change ID                          | Outcome (user can …)                                             | Prerequisites | PRD refs                      | Status   |
 | ---- | ---------------------------------- | ---------------------------------------------------------------- | ------------- | ----------------------------- | -------- |
-| F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | in-progress |
+| F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | done |
 | S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | in-progress |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | proposed |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | proposed |
@@ -84,7 +84,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** Wymaga utworzenia/skonfigurowania żywego projektu Supabase przez użytkownika (konto, klucze) — agent może poprowadzić proces krok po kroku, ale akcja na koncie Supabase wykracza poza repo i wymaga użytkownika.
 - **Unknowns:** —
 - **Risk:** Bez tego fundamentu żadna historia użytkownika nie działa end-to-end — dziś auth i dane to tylko szkielet z startera. Sekwencjonowany jako pierwszy, bo blokuje dosłownie wszystko inne. Ryzyko: trzy różne mechanizmy zmiennych środowiskowych (`.env` / `.dev.vars` / `wrangler secret`) dla tych samych kluczy Supabase mogą się rozjechać pod presją czasu (patrz `infrastructure.md`).
-- **Status:** in-progress
+- **Status:** done
 
 ## Slices
 
@@ -197,4 +197,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
-(empty — nic jeszcze nie zostało zarchiwizowane)
+- **F-01: (foundation) żywe połączenie Supabase + minimalny schemat fiszek** — Archived 2026-09-14 → `context/archive/2026-09-12-supabase-connection-and-schema/`. Lesson: —.
