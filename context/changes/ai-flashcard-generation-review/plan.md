@@ -274,32 +274,32 @@ No schema changes — the existing `flashcards` migration already supports this 
 
 #### Automated
 
-- [x] 1.1 Linting passes: `npm run lint`
-- [x] 1.2 Build passes: `npm run build`
+- [x] 1.1 Linting passes: `npm run lint` — 3c40cb5
+- [x] 1.2 Build passes: `npm run build` — 3c40cb5
 
 #### Manual
 
-- [x] 1.3 Valid source text returns candidates matching DTO shape and length bounds
-- [x] 1.4 Text over 5,000 characters is rejected with 400
-- [x] 1.5 Unauthenticated request returns 401
-- [x] 1.6 Broken config results in a clean JSON error, not an opaque platform error
-- [x] 1.7 OpenRouter request restricts routing to zero-data-retention providers and account-level prompt logging is confirmed off
-- [x] 1.8 One invalid candidate in the response doesn't fail the whole batch; all-invalid returns a clean error
+- [x] 1.3 Valid source text returns candidates matching DTO shape and length bounds — 3c40cb5
+- [x] 1.4 Text over 5,000 characters is rejected with 400 — 3c40cb5
+- [x] 1.5 Unauthenticated request returns 401 — 3c40cb5
+- [x] 1.6 Broken config results in a clean JSON error, not an opaque platform error — 3c40cb5
+- [x] 1.7 OpenRouter request restricts routing to zero-data-retention providers and account-level prompt logging is confirmed off — 3c40cb5
+- [x] 1.8 One invalid candidate in the response doesn't fail the whole batch; all-invalid returns a clean error — 3c40cb5
 
 ### Phase 2: Review UI & accept persistence
 
 #### Automated
 
-- [ ] 2.1 Linting passes: `npm run lint`
-- [ ] 2.2 Build passes: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint`
+- [x] 2.2 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.3 Generating produces a visible candidate list
-- [ ] 2.4 Accepting an unedited candidate creates a row with source = 'ai-full'
-- [ ] 2.5 Editing then accepting creates a row with source = 'ai-edited' and edited content
-- [ ] 2.6 Rejecting removes the candidate and creates no row
-- [ ] 2.7 Refresh mid-review clears unreviewed candidates with no orphaned data
+- [x] 2.3 Generating produces a visible candidate list
+- [x] 2.4 Accepting an unedited candidate creates a row with source = 'ai-full'
+- [x] 2.5 Editing then accepting creates a row with source = 'ai-edited' and edited content
+- [x] 2.6 Rejecting removes the candidate and creates no row
+- [x] 2.7 Refresh mid-review clears unreviewed candidates with no orphaned data
 
 ### Phase 3: Guardrails, config wiring & manual verification
 

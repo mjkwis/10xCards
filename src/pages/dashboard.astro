@@ -1,11 +1,14 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { GenerateReviewIsland } from "@/components/flashcards/GenerateReviewIsland";
+import { OPENROUTER_API_KEY } from "astro:env/server";
 
 const { user } = Astro.locals;
+const openRouterConfigured = Boolean(OPENROUTER_API_KEY);
 ---
 
 <Layout title="Dashboard">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
+  <div class="bg-cosmic flex min-h-screen flex-col items-center gap-8 p-4 py-12">
     <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
       <h1 class="mb-4 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
         Dashboard
@@ -13,7 +16,6 @@ const { user } = Astro.locals;
       <p class="text-blue-100/80">
         Welcome, <span class="font-semibold text-white">{user?.email}</span>
       </p>
-      <p class="mt-2 text-sm text-blue-100/50">This page is only for authenticated users.</p>
       <form method="POST" action="/api/auth/signout" class="mt-6">
         <button
           type="submit"
@@ -23,5 +25,6 @@ const { user } = Astro.locals;
         </button>
       </form>
     </div>
+    <GenerateReviewIsland openRouterConfigured={openRouterConfigured} client:load />
   </div>
 </Layout>
