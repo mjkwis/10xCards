@@ -76,12 +76,24 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
 
       <div className="mt-3 flex flex-wrap gap-2">
         {isEditing ? (
-          <Button type="button" size="sm" disabled={isSaving} onClick={() => handleAccept("ai-edited")}>
+          <Button
+            type="button"
+            size="sm"
+            disabled={isSaving}
+            onClick={() => handleAccept("ai-edited")}
+            className="bg-green-500 text-black hover:bg-green-600"
+          >
             Save edit
           </Button>
         ) : (
           <>
-            <Button type="button" size="sm" disabled={isSaving} onClick={() => handleAccept("ai-full")}>
+            <Button
+              type="button"
+              size="sm"
+              disabled={isSaving}
+              onClick={() => handleAccept("ai-full")}
+              className="bg-green-500 text-black hover:bg-green-600"
+            >
               Accept
             </Button>
             <Button
@@ -92,12 +104,20 @@ export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCa
               onClick={() => {
                 setIsEditing(true);
               }}
+              className="bg-black text-white hover:bg-black/80"
             >
               Edit
             </Button>
           </>
         )}
-        <Button type="button" variant="ghost" size="sm" disabled={isSaving} onClick={onRejected}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={isSaving}
+          onClick={onRejected}
+          className="bg-red-600 text-white hover:bg-red-700"
+        >
           Reject
         </Button>
       </div>
