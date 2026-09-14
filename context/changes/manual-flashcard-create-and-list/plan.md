@@ -233,31 +233,31 @@ No schema changes — the `flashcards` table, RLS policies, and check constraint
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run build`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run build` — be10b6c
+- [x] 1.2 Linting passes: `npm run lint` — be10b6c
 
 #### Manual
 
-- [ ] 1.3 Signed-in user with existing flashcards sees them all listed, newest first, on `/dashboard` load
-- [ ] 1.4 Fresh/empty account sees the empty-state message instead of a blank section
-- [ ] 1.5 Source badges correctly read "Manual" vs "AI" for existing rows of each `source` value
-- [ ] 1.6 AI generate/review flow still works exactly as before
-- [ ] 1.7 The "Create flashcard — coming soon" placeholder renders in its slot and is inert
+- [x] 1.3 Signed-in user with existing flashcards sees them all listed, newest first, on `/dashboard` load — be10b6c
+- [x] 1.4 Fresh/empty account sees the empty-state message instead of a blank section — be10b6c
+- [x] 1.5 Source badges correctly read "Manual" vs "AI" for existing rows of each `source` value — be10b6c
+- [x] 1.6 AI generate/review flow still works exactly as before — be10b6c
+- [x] 1.7 The "Create flashcard — coming soon" placeholder renders in its slot and is inert — be10b6c
 
 ### Phase 2: Manual Create
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run build`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npm run build`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Submitting a valid front/back creates a flashcard that appears at the top of the list instantly, with a "Manual" badge
-- [ ] 2.4 The form clears and stays visible after a successful save
-- [ ] 2.5 Refreshing the page shows the newly created card persisted
-- [ ] 2.6 Submit is disabled when front or back is empty; length limits enforced
-- [ ] 2.7 A forced save failure shows the inline error message and leaves typed text intact
+- [x] 2.3 Submitting a valid front/back creates a flashcard that appears at the top of the list instantly, with a "Manual" badge
+- [x] 2.4 The form clears and stays visible after a successful save
+- [x] 2.5 Refreshing the page shows the newly created card persisted
+- [x] 2.6 Submit is disabled when front or back is empty; length limits enforced
+- [x] 2.7 A forced save failure shows the inline error message and leaves typed text intact
 
 ### Phase 3: AI-Accept Sync
 
