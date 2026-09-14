@@ -44,7 +44,7 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 | F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | done     |
 | S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done     |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | done     |
-| S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | proposed |
+| S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | in-progress |
 | S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | proposed |
 | S-05 | delete-flashcard-with-confirmation | usuwa fiszkę, z potwierdzeniem                                   | S-03          | FR-007                        | proposed |
 | S-06 | srs-review-session                 | uczy się fiszek w sesji z algorytmem powtórek (SRS)              | S-03          | FR-009                        | blocked  |
@@ -124,7 +124,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Świadomie połączone w jeden slice (create + list) — tworzenie fiszki bez miejsca, by zobaczyć efekt, nie ma samodzielnej wartości użytkowej.
-- **Status:** proposed
+- **Status:** in-progress
 
 ### S-04: Użytkownik edytuje istniejącą fiszkę
 
