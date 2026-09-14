@@ -42,7 +42,7 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 | ID   | Change ID                          | Outcome (user can …)                                             | Prerequisites | PRD refs                      | Status   |
 | ---- | ---------------------------------- | ---------------------------------------------------------------- | ------------- | ----------------------------- | -------- |
 | F-01 | supabase-connection-and-schema     | (foundation) żywe połączenie Supabase + minimalny schemat fiszek | —             | Access Control, FR-008        | done |
-| S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | in-progress |
+| S-01 | working-signup-signin              | zakłada konto i loguje się                                       | F-01          | FR-008                        | done |
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | proposed |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | proposed |
 | S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | proposed |
@@ -98,7 +98,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Kod szkieletowy (signin/signup/middleware) już istnieje w repo, ale nigdy nie był wykonany wobec żywego projektu — pierwsza weryfikacja może odkryć rozjazd konfiguracji (patrz Risk F-01).
-- **Status:** in-progress
+- **Status:** done
 
 ### S-02: Użytkownik generuje i recenzuje fiszki AI
 
@@ -198,3 +198,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ## Done
 
 - **F-01: (foundation) żywe połączenie Supabase + minimalny schemat fiszek** — Archived 2026-09-14 → `context/archive/2026-09-12-supabase-connection-and-schema/`. Lesson: —.
+- **S-01: zakłada konto i loguje się** — Archived 2026-09-14 → `context/archive/2026-09-14-working-signup-signin/`. Lesson: —.
