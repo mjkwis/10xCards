@@ -1,4 +1,5 @@
 // @ts-check
+import process from "node:process";
 import { defineConfig, envField } from "astro/config";
 
 import react from "@astrojs/react";
@@ -13,7 +14,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  adapter: cloudflare(),
+  adapter: process.env.VITEST ? undefined : cloudflare(),
   env: {
     schema: {
       SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
