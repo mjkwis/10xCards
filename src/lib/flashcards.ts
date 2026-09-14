@@ -65,3 +65,23 @@ export async function updateFlashcard(id: string, front: string, back: string): 
     clearTimeout(timeout);
   }
 }
+
+export async function deleteFlashcard(id: string): Promise<void> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, SAVE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`/api/flashcards/${id}`, {
+      method: "DELETE",
+      signal: controller.signal,
+    });
+    if (response.ok || response.status === 404) {
+      return;
+    }
+    throw new Error("Failed to delete flashcard");
+  } finally {
+    clearTimeout(timeout);
+  }
+}

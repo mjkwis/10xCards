@@ -66,3 +66,36 @@ export const PATCH: APIRoute = async (context) => {
 
   return Response.json(data, { status: 200 });
 };
+
+export const DELETE: APIRoute = async (context) => {
+  if (!context.locals.user) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const id = context.params.id;
+  if (!id || !z.uuid().safeParse(id).success) {
+    return Response.json({ error: "Invalid flashcard id" }, { status: 400 });
+  }
+
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return Response.json({ error: "Supabase is not configured" }, { status: 502 });
+  }
+
+  const { data, error: deleteError } = await supabase
+    .from("flashcards")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", context.locals.user.id)
+    .select("id");
+
+  if (deleteError) {
+    return Response.json({ error: "Failed to delete flashcard" }, { status: 502 });
+  }
+
+  if (data.length === 0) {
+    return Response.json({ error: "Flashcard not found" }, { status: 404 });
+  }
+
+  return new Response(null, { status: 204 });
+};

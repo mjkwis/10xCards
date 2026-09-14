@@ -175,16 +175,16 @@ No schema changes. The `flashcards_delete_own` RLS policy already exists from th
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npm run build`
-- [ ] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run build`
+- [x] 1.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 1.3 DELETE on own id returns 204 with no body and the row is gone
-- [ ] 1.4 DELETE on another user's id returns 404
-- [ ] 1.5 DELETE on a nonexistent id returns 404
-- [ ] 1.6 DELETE with an invalid (non-uuid) id returns 400
-- [ ] 1.7 Calling DELETE twice returns 204 then 404, and `deleteFlashcard()` resolves both times without throwing
+- [x] 1.3 DELETE on own id returns 204 with no body and the row is gone
+- [x] 1.4 DELETE on another user's id returns 404
+- [x] 1.5 DELETE on a nonexistent id returns 404
+- [x] 1.6 DELETE with an invalid (non-uuid) id returns 400
+- [x] 1.7 Calling DELETE twice returns 204 then 404, and `deleteFlashcard()` resolves both times without throwing
 
 ### Phase 2: In-place delete confirmation UI
 
