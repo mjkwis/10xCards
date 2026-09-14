@@ -1,4 +1,5 @@
 import { GenerationError } from "@/components/flashcards/GenerationError";
+import { FlashcardListItem } from "@/components/flashcards/FlashcardListItem";
 import type { Flashcard } from "@/types";
 
 interface FlashcardsListProps {
@@ -6,13 +7,11 @@ interface FlashcardsListProps {
   state: "loading" | "ready" | "error";
   error: string;
   onRetry: () => void;
+  onUpdated: (flashcard: Flashcard) => void;
+  onNotFound: (id: string) => void;
 }
 
-function sourceBadgeLabel(source: Flashcard["source"]) {
-  return source === "manual" ? "Manual" : "AI";
-}
-
-export function FlashcardsList({ flashcards, state, error, onRetry }: FlashcardsListProps) {
+export function FlashcardsList({ flashcards, state, error, onRetry, onUpdated, onNotFound }: FlashcardsListProps) {
   if (state === "loading" && flashcards.length === 0) {
     return <p className="text-sm text-blue-100/70">Loading your flashcards…</p>;
   }
@@ -32,17 +31,7 @@ export function FlashcardsList({ flashcards, state, error, onRetry }: Flashcards
   return (
     <div className="space-y-3">
       {flashcards.map((flashcard) => (
-        <div key={flashcard.id} className="rounded-xl border border-white/10 bg-white/5 p-4 text-white">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <span className="rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-xs text-blue-100/80">
-              {sourceBadgeLabel(flashcard.source)}
-            </span>
-          </div>
-          <div className="space-y-1">
-            <p className="font-semibold">{flashcard.front}</p>
-            <p className="text-sm text-blue-100/80">{flashcard.back}</p>
-          </div>
-        </div>
+        <FlashcardListItem key={flashcard.id} flashcard={flashcard} onUpdated={onUpdated} onNotFound={onNotFound} />
       ))}
     </div>
   );

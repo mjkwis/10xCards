@@ -63,13 +63,28 @@ export function FlashcardsDashboard({
     });
   }, []);
 
+  const handleCardUpdated = useCallback((flashcard: Flashcard) => {
+    setFlashcards((prev) => prev.map((f) => (f.id === flashcard.id ? flashcard : f)));
+  }, []);
+
+  const handleCardNotFound = useCallback((id: string) => {
+    setFlashcards((prev) => prev.filter((f) => f.id !== id));
+  }, []);
+
   return (
     <>
       <GenerateReviewIsland openRouterConfigured={openRouterConfigured} onSaved={handleCardSaved} />
       <ManualCreateForm onCreated={handleCardSaved} />
       <div className="w-full max-w-2xl space-y-3">
         <h2 className="text-xl font-semibold text-white">Your flashcards</h2>
-        <FlashcardsList flashcards={flashcards} state={listState} error={listError} onRetry={retryLoadFlashcards} />
+        <FlashcardsList
+          flashcards={flashcards}
+          state={listState}
+          error={listError}
+          onRetry={retryLoadFlashcards}
+          onUpdated={handleCardUpdated}
+          onNotFound={handleCardNotFound}
+        />
       </div>
     </>
   );

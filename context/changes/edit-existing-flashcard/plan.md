@@ -186,27 +186,27 @@ No schema changes. The `flashcards_update_own` RLS policy and `updated_at` trigg
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run build`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run build` — 73a9aa7
+- [x] 1.2 Linting passes: `npm run lint` — 73a9aa7
 
 #### Manual
 
-- [x] 1.3 PATCH with valid front/back returns 200 with updated row and bumped updated_at
-- [x] 1.4 PATCH on another user's or nonexistent id returns 404
-- [x] 1.5 PATCH with invalid front/back returns 400
-- [x] 1.6 Source transition rule verified (ai-full → ai-edited; manual/ai-edited unchanged)
+- [x] 1.3 PATCH with valid front/back returns 200 with updated row and bumped updated_at — 73a9aa7
+- [x] 1.4 PATCH on another user's or nonexistent id returns 404 — 73a9aa7
+- [x] 1.5 PATCH with invalid front/back returns 400 — 73a9aa7
+- [x] 1.6 Source transition rule verified (ai-full → ai-edited; manual/ai-edited unchanged) — 73a9aa7
 
 ### Phase 2: In-place edit UI
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run build`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npm run build`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Edit shows seeded textareas; Cancel reverts instantly with no confirmation
-- [ ] 2.4 Save disabled until text actually changes
-- [ ] 2.5 Valid save updates card in place and persists across reload
-- [ ] 2.6 404 case shows not-found message with working Remove action
-- [ ] 2.7 Network/timeout failure keeps card editable with retryable error and no data loss
+- [x] 2.3 Edit shows seeded textareas; Cancel reverts instantly with no confirmation
+- [x] 2.4 Save disabled until text actually changes
+- [x] 2.5 Valid save updates card in place and persists across reload
+- [x] 2.6 404 case shows not-found message with working Remove action
+- [x] 2.7 Network/timeout failure keeps card editable with retryable error and no data loss
