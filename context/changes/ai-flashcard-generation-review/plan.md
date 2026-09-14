@@ -290,28 +290,28 @@ No schema changes — the existing `flashcards` migration already supports this 
 
 #### Automated
 
-- [x] 2.1 Linting passes: `npm run lint`
-- [x] 2.2 Build passes: `npm run build`
+- [x] 2.1 Linting passes: `npm run lint` — 2546458
+- [x] 2.2 Build passes: `npm run build` — 2546458
 
 #### Manual
 
-- [x] 2.3 Generating produces a visible candidate list
-- [x] 2.4 Accepting an unedited candidate creates a row with source = 'ai-full'
-- [x] 2.5 Editing then accepting creates a row with source = 'ai-edited' and edited content
-- [x] 2.6 Rejecting removes the candidate and creates no row
-- [x] 2.7 Refresh mid-review clears unreviewed candidates with no orphaned data
+- [x] 2.3 Generating produces a visible candidate list — 2546458
+- [x] 2.4 Accepting an unedited candidate creates a row with source = 'ai-full' — 2546458
+- [x] 2.5 Editing then accepting creates a row with source = 'ai-edited' and edited content — 2546458
+- [x] 2.6 Rejecting removes the candidate and creates no row — 2546458
+- [x] 2.7 Refresh mid-review clears unreviewed candidates with no orphaned data — 2546458
 
 ### Phase 3: Guardrails, config wiring & manual verification
 
 #### Automated
 
-- [ ] 3.1 Linting passes: `npm run lint`
-- [ ] 3.2 Build passes: `npm run build`
+- [x] 3.1 Linting passes: `npm run lint`
+- [x] 3.2 Build passes: `npm run build`
 - [ ] 3.3 CI workflow passes on push
 
 #### Manual
 
-- [ ] 3.4 Missing OPENROUTER_API_KEY shows a scoped notice on the dashboard only (not on sign-in/sign-up)
-- [ ] 3.5 "Generating…" state appears effectively instantly and persists past ~2s without a blank screen
-- [ ] 3.6 Broken OpenRouter response shows inline error + "Try again", not a raw platform error
-- [ ] 3.7 `wrangler secret put OPENROUTER_API_KEY` run before first relevant production deploy
+- [x] 3.4 Missing OPENROUTER_API_KEY shows a scoped notice on the dashboard only (not on sign-in/sign-up)
+- [x] 3.5 "Generating…" state appears effectively instantly and persists past ~2s without a blank screen
+- [x] 3.6 Broken OpenRouter response shows inline error + "Try again", not a raw platform error
+- [x] 3.7 `wrangler secret put OPENROUTER_API_KEY` run before first relevant production deploy
