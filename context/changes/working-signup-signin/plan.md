@@ -193,10 +193,10 @@ Not applicable — no data model changes.
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes
-- [x] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes — c8f3b49
+- [x] 2.2 `npm run build` succeeds — c8f3b49
 
 #### Manual
 
-- [x] 2.3 Signing up with a new throwaway email lands directly on `/dashboard`, showing that account's email
-- [x] 2.4 No route in the app links to or references `/auth/confirm-email` anymore
+- [x] 2.3 Signing up with a new throwaway email lands directly on `/dashboard`, showing that account's email — c8f3b49
+- [x] 2.4 No route in the app links to or references `/auth/confirm-email` anymore — c8f3b49
