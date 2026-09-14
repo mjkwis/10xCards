@@ -1,174 +1,212 @@
-# 10x Astro Starter
+# 10xCards
 
-![](./public/template.png)
+10xCards is an AI-assisted flashcard application for IT professionals who want
+to retain knowledge discovered while reading technical documentation, articles,
+and forum answers. A user can paste source text, review flashcards proposed by
+AI, and save only the useful cards to a private collection.
 
-A modern, opinionated starter template for building fast, accessible web applications.
+The product is designed to reduce the effort between finding useful information
+and turning it into material for later study. Its requirements and scope are
+defined in the [Product Requirements Document](./context/foundation/prd.md).
 
-## Tech Stack
+## Current MVP scope
 
-- [Astro](https://astro.build/) v6 - Modern web framework with server-first rendering
-- [React](https://react.dev/) v19 - UI library for interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4 - Utility-first CSS framework
-- [Supabase](https://supabase.com/) - Authentication and backend-as-a-service
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Edge deployment runtime
+The repository currently implements:
+
+- email and password registration, sign-in, and sign-out with Supabase Auth;
+- authenticated access to a private flashcard collection;
+- AI generation of up to 10 flashcard candidates from pasted text of up to
+  5,000 characters;
+- review of generated candidates before persistence: accept, edit, or reject;
+- manual creation and listing of flashcards;
+- editing persisted flashcards;
+- deletion of flashcards after explicit confirmation;
+- owner-scoped PostgreSQL Row Level Security policies for every flashcard
+  operation.
+
+An SRS-based study session is specified in the PRD and is currently being
+planned. It is not implemented in the current codebase. See the
+[project roadmap](./context/foundation/roadmap.md) for delivery status.
+
+## Core workflow
+
+1. A user creates an account or signs in.
+2. The user pastes a fragment of source material into the dashboard.
+3. OpenRouter generates question-and-answer candidates based only on that text.
+4. The user accepts, edits, or rejects each candidate.
+5. Accepted cards are saved to the user's private Supabase collection.
+6. The user can also create, browse, edit, and delete cards manually.
+
+AI-generated cards are stored with their origin. A candidate accepted without
+changes uses the `ai-full` source, an edited candidate uses `ai-edited`, and a
+manually created card uses `manual`.
+
+## Tech stack
+
+- [Astro 6](https://astro.build/) with server-side rendering
+- [React 19](https://react.dev/) islands for interactive workflows
+- [TypeScript 5](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/) for PostgreSQL and authentication
+- [OpenRouter](https://openrouter.ai/) for structured AI generation
+- [Zod](https://zod.dev/) for request and response validation
+- [Cloudflare Workers](https://workers.cloudflare.com/) as the runtime target
+
+## Architecture
+
+```text
+src/
+|-- components/
+|   |-- auth/                  # Registration and sign-in forms
+|   `-- flashcards/           # Generation, review, and CRUD interfaces
+|-- lib/
+|   |-- services/openrouter.ts # AI request and response processing
+|   |-- flashcards.ts          # Client-side flashcard API functions
+|   `-- supabase.ts            # Cookie-aware Supabase server client
+|-- pages/
+|   |-- api/auth/              # Authentication endpoints
+|   |-- api/flashcards/        # Generation and CRUD endpoints
+|   |-- auth/                  # Authentication pages
+|   `-- dashboard.astro        # Protected application screen
+`-- middleware.ts              # Session resolution and route protection
+
+supabase/migrations/           # Database schema and RLS policies
+context/foundation/            # PRD, roadmap, and technical decisions
+```
+
+Astro API routes provide the server boundary. Supabase persists flashcards and
+enforces ownership in the database. React islands call the API routes and keep
+the dashboard state synchronized after create, update, and delete operations.
 
 ## Prerequisites
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+- Node.js 22 (the project version is recorded in `.nvmrc`)
+- npm
+- Docker, when running Supabase locally
+- an OpenRouter API key to use AI generation
 
-## Getting Started
+## Local setup
 
-1. Clone the repository:
-
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
-
-2. Install dependencies:
+1. Clone the repository and install dependencies:
 
 ```bash
+git clone https://github.com/mjkwis/10xCards.git
+cd 10xCards
 npm install
 ```
 
-3. Set up Supabase and configure environment variables — see [Supabase Configuration](#supabase-configuration) below.
-
-4. Create a `.dev.vars` file for local Cloudflare dev secrets:
-
-```bash
-cp .env.example .dev.vars
-```
-
-5. Run the development server:
-
-```bash
-npm run dev
-```
-
-## Available Scripts
-
-- `npm run dev` - Start development server (Cloudflare workerd runtime)
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint with type-checked rules
-- `npm run lint:fix` - Auto-fix ESLint issues
-- `npm run format` - Run Prettier
-
-## Project Structure
-
-```md
-.
-├── src/
-│ ├── layouts/ # Astro layouts
-│ ├── pages/ # Astro pages
-│ │ └── api/ # API endpoints
-│ ├── components/ # UI components (Astro & React)
-│ └── assets/ # Static assets
-├── public/ # Public assets
-├── wrangler.jsonc # Cloudflare Workers config
-```
-
-## Supabase Configuration
-
-This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** — they are never exposed to the client.
-
-### First-time setup (local, no cloud project needed)
-
-Requires [Docker](https://www.docker.com/) and ~7 GB RAM.
-
-1. Create your `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-2. Initialize the local Supabase project (creates a `supabase/` config folder):
-
-```bash
-npx supabase init
-```
-
-3. Start the local stack (downloads Docker images on first run):
+2. Start the local Supabase stack:
 
 ```bash
 npx supabase start
 ```
 
-4. Copy the credentials printed by the CLI into your `.env` and `.dev.vars`:
+The command prints a local API URL and anon key. The existing migration creates
+the `flashcards` table, validation constraints, update trigger, index, and
+owner-scoped RLS policies.
 
-```
+3. Create a `.dev.vars` file in the project root:
+
+```dotenv
 SUPABASE_URL=http://127.0.0.1:54321
-SUPABASE_KEY=<anon key from CLI output>
+SUPABASE_KEY=<local-anon-key>
+OPENROUTER_API_KEY=<openrouter-api-key>
+# Optional; defaults to openai/gpt-4o-mini
+OPENROUTER_MODEL=openai/gpt-4o-mini
 ```
 
-5. To stop the stack when done:
+`.dev.vars` is ignored by Git. These variables are declared as server-only
+secrets in `astro.config.mjs` and are not exposed to browser code.
+
+4. Start the development server:
+
+```bash
+npm run dev
+```
+
+Astro serves the application at `http://localhost:4321` by default.
+
+To stop the local Supabase services, run:
 
 ```bash
 npx supabase stop
 ```
 
-The local Studio UI is available at `http://localhost:54323`.
+## Hosted Supabase
 
-Database schema (the `flashcards` table and its RLS policies) is managed via migrations in `supabase/migrations/`. `npx supabase start` applies them automatically to the local stack; run `npx supabase db reset` to re-apply from scratch, or `npx supabase db push` to bring a linked live project's schema in sync.
-
-### Using a cloud Supabase project instead
-
-If you prefer to use a hosted Supabase project, add these variables to your `.env` and `.dev.vars` files:
-
-| Variable       | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| `SUPABASE_URL` | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY` | `anon` public key from Supabase dashboard → Settings → API |
-
-```
-SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_KEY=<anon-key>
-```
-
-### Email confirmation in local development
-
-By default Supabase requires email confirmation before a user can sign in. To skip this during local development:
-
-1. Open the Supabase dashboard for your project
-2. Go to **Authentication → Email → Confirm email**
-3. Toggle it **off**
-
-Users can then sign in immediately after sign-up without clicking a confirmation link.
-
-### Auth routes
-
-| Route          | Description                                                             |
-| -------------- | ----------------------------------------------------------------------- |
-| `/auth/signin` | Email/password sign-in form                                             |
-| `/auth/signup` | Email/password sign-up form                                             |
-| `/dashboard`   | Example protected page (redirects to `/auth/signin` if unauthenticated) |
-
-Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication. The middleware also redirects `/` based on auth state (signed in → `/dashboard`, signed out → `/auth/signin`), and redirects an already-authenticated user away from `/auth/signin` and `/auth/signup` to `/dashboard`.
-
-## Deployment
-
-This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
-
-1. Build the project:
+To use a hosted Supabase project, link the local Supabase configuration and push
+the migration:
 
 ```bash
-npm run build
+npx supabase link --project-ref <project-ref>
+npx supabase db push
 ```
 
-2. Deploy with Wrangler:
+Set `SUPABASE_URL` to the hosted project URL and `SUPABASE_KEY` to its anon key
+in `.dev.vars`. The current registration flow expects email confirmation to be
+disabled when immediate access after sign-up is required. Configure this under
+Authentication settings in the Supabase dashboard.
 
-```bash
-npx wrangler deploy
-```
+## Application routes
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
+| Route          | Purpose                                                           |
+| -------------- | ----------------------------------------------------------------- |
+| `/`            | Redirects to the dashboard or sign-in page based on session state |
+| `/auth/signup` | Creates an account with email and password                        |
+| `/auth/signin` | Starts an authenticated session                                   |
+| `/dashboard`   | Displays AI generation, manual creation, and the user's cards     |
 
-## CI
+The dashboard and all flashcard API endpoints require an authenticated user.
 
-GitHub Actions runs lint + build on every push and PR to `master`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
+## API routes
 
-## License
+| Method and route                | Purpose                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `POST /api/auth/signup`         | Register a user                                |
+| `POST /api/auth/signin`         | Sign in a user                                 |
+| `POST /api/auth/signout`        | Sign out the current user                      |
+| `GET /api/flashcards`           | List the current user's flashcards             |
+| `POST /api/flashcards`          | Persist a manual or accepted AI flashcard      |
+| `PATCH /api/flashcards/:id`     | Update a persisted flashcard                   |
+| `DELETE /api/flashcards/:id`    | Delete a persisted flashcard                   |
+| `POST /api/flashcards/generate` | Generate flashcard candidates from source text |
 
-MIT
+## Available scripts
+
+| Command            | Purpose                                                  |
+| ------------------ | -------------------------------------------------------- |
+| `npm run dev`      | Start the Cloudflare-compatible Astro development server |
+| `npm run build`    | Create a production build                                |
+| `npm run preview`  | Preview the production build locally                     |
+| `npm run lint`     | Run ESLint with type-aware rules                         |
+| `npm run lint:fix` | Apply supported ESLint fixes                             |
+| `npm run format`   | Format the repository with Prettier                      |
+| `npm run deploy`   | Build and deploy with Wrangler                           |
+
+## Data ownership and privacy
+
+Every flashcard row stores the authenticated Supabase user's ID. Select, insert,
+update, and delete policies require `auth.uid() = user_id`, so ownership is
+enforced even if an API query is changed incorrectly. API handlers also reject
+unauthenticated requests and scope mutations to the current user.
+
+Source text is sent to OpenRouter only when the authenticated user explicitly
+requests generation. The request asks OpenRouter to use a zero-data-retention
+provider. Generated candidates are validated before they are returned, and no
+source text is stored in the `flashcards` table.
+
+## Product documentation
+
+- [Product requirements](./context/foundation/prd.md)
+- [Roadmap](./context/foundation/roadmap.md)
+- [Shape notes](./context/foundation/shape-notes.md)
+- [Technical stack decision](./context/foundation/tech-stack.md)
+- [Infrastructure notes](./context/foundation/infrastructure.md)
+
+## Current limitations
+
+- The SRS study session from FR-009 is not implemented yet.
+- Source material is accepted as pasted text only; document import is out of
+  scope for the MVP.
+- Flashcard deduplication and collection sharing are intentionally out of scope.
+- An automated test suite and risk-based test plan have not been added yet.

@@ -29,3 +29,16 @@ export interface UpdateFlashcardCommand {
   front: string;
   back: string;
 }
+
+export type FlashcardRating = 1 | 2 | 3 | 4;
+
+export const FLASHCARD_RATING_LABELS: Record<FlashcardRating, string> = {
+  1: "Again",
+  2: "Hard",
+  3: "Good",
+  4: "Easy",
+};
+
+export interface ReviewFlashcardCommand {
+  rating: FlashcardRating;
+}

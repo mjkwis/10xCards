@@ -46,8 +46,8 @@ Profesjonaliści IT/tech regularnie uczą się nowych rzeczy z dokumentacji tech
 | S-02 | ai-flashcard-generation-review     | generuje i recenzuje fiszki AI (accept/edit/reject)              | F-01, S-01    | US-01, FR-001, FR-002, FR-003 | done     |
 | S-03 | manual-flashcard-create-and-list   | ręcznie tworzy fiszkę i przegląda swoją listę                    | F-01, S-01    | FR-004, FR-005                | done     |
 | S-04 | edit-existing-flashcard            | edytuje istniejącą fiszkę                                        | S-03          | FR-006                        | done     |
-| S-05 | delete-flashcard-with-confirmation | usuwa fiszkę, z potwierdzeniem                                   | S-03          | FR-007                        | done |
-| S-06 | srs-review-session                 | uczy się fiszek w sesji z algorytmem powtórek (SRS)              | S-03          | FR-009                        | blocked  |
+| S-05 | delete-flashcard-with-confirmation | usuwa fiszkę, z potwierdzeniem                                   | S-03          | FR-007                        | done     |
+| S-06 | srs-review-session                 | uczy się fiszek w sesji z algorytmem powtórek (SRS)              | S-03          | FR-009                        | in-progress |
 
 ## Streams
 
@@ -161,7 +161,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Który gotowy algorytm/biblioteka SRS zostanie zintegrowany? PRD mówi tylko o "gotowym, zintegrowanym algorytmie powtórek" (Socratic FR-009 nazywa to wprost "sednem produktu"), nie wskazując konkretnego wyboru; `tech-stack.md` też go nie nazywa. — Owner: user. Block: yes.
 - **Risk:** Jedyny slice z twardym blokerem — bez wybranej biblioteki/algorytmu SRS nie da się sensownie zaplanować ani schematu danych do harmonogramowania powtórek, ani logiki samej sesji.
-- **Status:** blocked
+- **Status:** in-progress
 
 ## Backlog Handoff
 

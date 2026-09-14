@@ -9,6 +9,16 @@ export const flashcardSchema = z.object({
   user_id: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
+  due_at: z.string(),
+  stability: z.number(),
+  difficulty: z.number(),
+  elapsed_days: z.number(),
+  scheduled_days: z.number(),
+  learning_steps: z.number(),
+  reps: z.number(),
+  lapses: z.number(),
+  state: z.number(),
+  last_reviewed_at: z.string().nullable(),
 });
 
 const REQUEST_TIMEOUT_MS = 10_000;
