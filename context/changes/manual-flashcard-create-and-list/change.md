@@ -1,7 +1,7 @@
 ---
 change_id: manual-flashcard-create-and-list
 title: Manual flashcard create + list view
-status: implemented
+status: impl_reviewed
 created: 2026-09-14
 updated: 2026-09-14
 ---

@@ -1,18 +1,8 @@
 import { useState, type SyntheticEvent } from "react";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { ServerError } from "@/components/auth/ServerError";
+import { saveFlashcard } from "@/lib/flashcards";
 import type { Flashcard } from "@/types";
-
-const flashcardSchema = z.object({
-  id: z.string(),
-  front: z.string(),
-  back: z.string(),
-  source: z.enum(["ai-full", "ai-edited", "manual"]),
-  user_id: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
-});
 
 interface ManualCreateFormProps {
   onCreated: (flashcard: Flashcard) => void;
@@ -29,17 +19,8 @@ export function ManualCreateForm({ onCreated }: ManualCreateFormProps) {
     setSaveState("saving");
     setErrorMessage("");
     try {
-      const response = await fetch("/api/flashcards", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ front, back, source: "manual" }),
-      });
-      const body: unknown = await response.json().catch(() => null);
-      const parsed = flashcardSchema.safeParse(body);
-      if (!response.ok || !parsed.success) {
-        throw new Error("Failed to save flashcard");
-      }
-      onCreated(parsed.data);
+      const flashcard = await saveFlashcard(front, back, "manual");
+      onCreated(flashcard);
       setFront("");
       setBack("");
       setSaveState("idle");

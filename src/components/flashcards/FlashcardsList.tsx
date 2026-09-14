@@ -13,7 +13,7 @@ function sourceBadgeLabel(source: Flashcard["source"]) {
 }
 
 export function FlashcardsList({ flashcards, state, error, onRetry }: FlashcardsListProps) {
-  if (state === "loading") {
+  if (state === "loading" && flashcards.length === 0) {
     return <p className="text-sm text-blue-100/70">Loading your flashcards…</p>;
   }
 

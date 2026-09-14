@@ -3,17 +3,8 @@ import { z } from "zod";
 import { GenerateReviewIsland } from "@/components/flashcards/GenerateReviewIsland";
 import { ManualCreateForm } from "@/components/flashcards/ManualCreateForm";
 import { FlashcardsList } from "@/components/flashcards/FlashcardsList";
+import { flashcardSchema } from "@/lib/flashcards";
 import type { Flashcard } from "@/types";
-
-const flashcardSchema = z.object({
-  id: z.string(),
-  front: z.string(),
-  back: z.string(),
-  source: z.enum(["ai-full", "ai-edited", "manual"]),
-  user_id: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
-});
 
 const flashcardsResponseSchema = z.array(flashcardSchema);
 

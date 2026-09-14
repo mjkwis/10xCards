@@ -7,6 +7,7 @@ import { CandidateCard } from "@/components/flashcards/CandidateCard";
 import type { Flashcard, FlashcardCandidateDto } from "@/types";
 
 const MAX_SOURCE_TEXT_LENGTH = 5000;
+const GENERATE_TIMEOUT_MS = 30_000;
 
 const generateResponseSchema = z.object({
   candidates: z.array(z.object({ front: z.string(), back: z.string() })),
@@ -41,11 +42,16 @@ export function GenerateReviewIsland({ openRouterConfigured, onSaved }: Generate
 
   async function handleGenerate() {
     setGenerationState("generating");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, GENERATE_TIMEOUT_MS);
     try {
       const response = await fetch("/api/flashcards/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sourceText }),
+        signal: controller.signal,
       });
       const body: unknown = await response.json();
       const parsed = generateResponseSchema.safeParse(body);
@@ -62,6 +68,8 @@ export function GenerateReviewIsland({ openRouterConfigured, onSaved }: Generate
     } catch {
       setErrorMessage("Flashcard generation failed. Please try again.");
       setGenerationState("error");
+    } finally {
+      clearTimeout(timeout);
     }
   }
 

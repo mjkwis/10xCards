@@ -1,36 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ServerError } from "@/components/auth/ServerError";
+import { saveFlashcard } from "@/lib/flashcards";
 import type { Flashcard, FlashcardCandidateDto, FlashcardSource } from "@/types";
 
 interface CandidateCardProps {
   candidate: FlashcardCandidateDto;
   onAccepted: (flashcard: Flashcard) => void;
   onRejected: () => void;
-}
-
-const SAVE_TIMEOUT_MS = 10_000;
-
-async function saveFlashcard(front: string, back: string, source: FlashcardSource): Promise<Flashcard> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, SAVE_TIMEOUT_MS);
-
-  try {
-    const response = await fetch("/api/flashcards", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ front, back, source }),
-      signal: controller.signal,
-    });
-    if (!response.ok) {
-      throw new Error("Failed to save flashcard");
-    }
-    return (await response.json()) as Flashcard;
-  } finally {
-    clearTimeout(timeout);
-  }
 }
 
 export function CandidateCard({ candidate, onAccepted, onRejected }: CandidateCardProps) {
