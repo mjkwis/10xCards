@@ -18,8 +18,8 @@ export const PATCH: APIRoute = async (context) => {
   }
 
   const id = context.params.id;
-  if (!id) {
-    return Response.json({ error: "Flashcard not found" }, { status: 404 });
+  if (!id || !z.uuid().safeParse(id).success) {
+    return Response.json({ error: "Invalid flashcard id" }, { status: 400 });
   }
 
   const body: unknown = await context.request.json().catch(() => null);

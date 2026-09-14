@@ -42,7 +42,7 @@
   - Tradeoff: Shared primitive is now dark-theme-only with no documented rationale; risk surfaces only when/if a light-background consumer appears.
   - Confidence: MED — safe today, but the future-proofing gap is real and undocumented.
   - Blind spot: No visibility into whether a light-background UI is on the roadmap.
-- **Decision**: PENDING
+- **Decision**: FIXED (via Fix B — reverted button.tsx `outline` variant; scoped dark-glass styling via `className` overrides at the 3 call sites: CandidateCard.tsx, GenerationError.tsx, FlashcardListItem.tsx x3)
 
 ### F2 — Malformed flashcard `id` yields misleading 502 instead of 400
 
@@ -52,7 +52,7 @@
 - **Location**: `src/pages/api/flashcards/[id].ts:36-47`
 - **Detail**: `context.params.id` is used directly in the initial `.eq("id", id)` select without format validation. A malformed (non-UUID) id produces a genuine Postgres error rather than PostgREST's "no rows" code `PGRST116`, so it falls through to `502 { error: "Failed to load flashcard" }` instead of a more accurate `400`. No injection risk (PostgREST parameterizes the value) — just an imprecise status code for a malformed-input case.
 - **Fix**: Validate `id` with `z.string().uuid()` (or equivalent) before querying, returning `400 { error: "Invalid flashcard id" }` on failure.
-- **Decision**: PENDING
+- **Decision**: FIXED (validated with `z.uuid()` — zod v4's non-deprecated form — before querying; missing/malformed id now returns `400 { error: "Invalid flashcard id" }`)
 
 ### F3 — Save/Cancel remain clickable after a 404 is shown
 
@@ -62,5 +62,5 @@
 - **Location**: `src/components/flashcards/FlashcardListItem.tsx:102-137`
 - **Detail**: When `updateFlashcard` throws `FlashcardNotFoundError`, the component stays in edit mode with `ServerError` + a "Remove" action rendered, but Save and Cancel remain enabled alongside it — matching the plan's literal wording ("stay in edit mode until the user clicks Remove"), but a user could click Save again and just re-issue a PATCH against an already-deleted row (harmless — it 404s again — but avoidable churn).
 - **Fix**: Disable Save/Cancel once `notFound` is true, so Remove is the only available action.
-- **Decision**: PENDING
+- **Decision**: FIXED (Save and Cancel now include `notFound` in their `disabled` condition)
 

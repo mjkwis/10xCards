@@ -123,7 +123,13 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
       <div className="mt-3 flex flex-wrap gap-2">
         {isEditing ? (
           <>
-            <Button type="button" variant="success" size="sm" disabled={isSaving || isUnchanged} onClick={handleSave}>
+            <Button
+              type="button"
+              variant="success"
+              size="sm"
+              disabled={isSaving || isUnchanged || notFound}
+              onClick={handleSave}
+            >
               Save
             </Button>
             <Button
@@ -131,7 +137,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
               variant="outline"
               size="sm"
               className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
-              disabled={isSaving}
+              disabled={isSaving || notFound}
               onClick={cancelEditing}
             >
               Cancel
