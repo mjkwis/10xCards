@@ -1,33 +1,38 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ServerError } from "@/components/auth/ServerError";
-import { updateFlashcard, FlashcardNotFoundError } from "@/lib/flashcards";
+import { updateFlashcard, deleteFlashcard, FlashcardNotFoundError } from "@/lib/flashcards";
 import type { Flashcard } from "@/types";
+
+type Mode = "view" | "editing" | "confirming-delete";
 
 interface FlashcardListItemProps {
   flashcard: Flashcard;
   onUpdated: (flashcard: Flashcard) => void;
   onNotFound: (id: string) => void;
+  onDeleted: (id: string) => void;
 }
 
 function sourceBadgeLabel(source: Flashcard["source"]) {
   return source === "manual" ? "Manual" : "AI";
 }
 
-export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: FlashcardListItemProps) {
-  const [isEditing, setIsEditing] = useState(false);
+export function FlashcardListItem({ flashcard, onUpdated, onNotFound, onDeleted }: FlashcardListItemProps) {
+  const [mode, setMode] = useState<Mode>("view");
   const [front, setFront] = useState(flashcard.front);
   const [back, setBack] = useState(flashcard.back);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function startEditing() {
     setFront(flashcard.front);
     setBack(flashcard.back);
     setError(null);
     setNotFound(false);
-    setIsEditing(true);
+    setMode("editing");
   }
 
   function cancelEditing() {
@@ -35,7 +40,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
     setBack(flashcard.back);
     setError(null);
     setNotFound(false);
-    setIsEditing(false);
+    setMode("view");
   }
 
   async function handleSave() {
@@ -47,7 +52,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
       onUpdated(updated);
       setFront(updated.front);
       setBack(updated.back);
-      setIsEditing(false);
+      setMode("view");
     } catch (err) {
       if (err instanceof FlashcardNotFoundError) {
         setNotFound(true);
@@ -56,6 +61,29 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
       }
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  function startConfirmingDelete() {
+    setDeleteError(null);
+    setMode("confirming-delete");
+  }
+
+  function cancelDelete() {
+    setDeleteError(null);
+    setMode("view");
+  }
+
+  async function handleConfirmDelete() {
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteFlashcard(flashcard.id);
+      onDeleted(flashcard.id);
+    } catch {
+      setDeleteError("Couldn't delete this flashcard. Please try again.");
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -69,7 +97,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
         </span>
       </div>
 
-      {isEditing ? (
+      {mode === "editing" ? (
         <div className="space-y-2">
           <textarea
             value={front}
@@ -92,6 +120,8 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
             placeholder="Back"
           />
         </div>
+      ) : mode === "confirming-delete" ? (
+        <p className="text-sm text-blue-100/80">Delete this flashcard? This can&apos;t be undone.</p>
       ) : (
         <div className="space-y-1">
           <p className="font-semibold">{flashcard.front}</p>
@@ -99,7 +129,9 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
         </div>
       )}
 
-      {notFound ? (
+      {mode === "confirming-delete" ? (
+        <ServerError message={deleteError} />
+      ) : notFound ? (
         <ServerError
           message="This flashcard no longer exists."
           action={
@@ -121,7 +153,7 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
       )}
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {isEditing ? (
+        {mode === "editing" ? (
           <>
             <Button
               type="button"
@@ -143,16 +175,37 @@ export function FlashcardListItem({ flashcard, onUpdated, onNotFound }: Flashcar
               Cancel
             </Button>
           </>
+        ) : mode === "confirming-delete" ? (
+          <>
+            <Button type="button" variant="destructive" size="sm" disabled={isDeleting} onClick={handleConfirmDelete}>
+              {isDeleting ? "Deleting…" : "Confirm"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
+              disabled={isDeleting}
+              onClick={cancelDelete}
+            >
+              Cancel
+            </Button>
+          </>
         ) : (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
-            onClick={startEditing}
-          >
-            Edit
-          </Button>
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/25 hover:text-white"
+              onClick={startEditing}
+            >
+              Edit
+            </Button>
+            <Button type="button" variant="destructive" size="sm" onClick={startConfirmingDelete}>
+              Delete
+            </Button>
+          </>
         )}
       </div>
     </div>

@@ -71,6 +71,10 @@ export function FlashcardsDashboard({
     setFlashcards((prev) => prev.filter((f) => f.id !== id));
   }, []);
 
+  const handleCardDeleted = useCallback((id: string) => {
+    setFlashcards((prev) => prev.filter((f) => f.id !== id));
+  }, []);
+
   return (
     <>
       <GenerateReviewIsland openRouterConfigured={openRouterConfigured} onSaved={handleCardSaved} />
@@ -84,6 +88,7 @@ export function FlashcardsDashboard({
           onRetry={retryLoadFlashcards}
           onUpdated={handleCardUpdated}
           onNotFound={handleCardNotFound}
+          onDeleted={handleCardDeleted}
         />
       </div>
     </>

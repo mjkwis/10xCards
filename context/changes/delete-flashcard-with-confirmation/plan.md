@@ -190,14 +190,14 @@ No schema changes. The `flashcards_delete_own` RLS policy already exists from th
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run build`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npm run build`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Delete button shows inline Confirm/Cancel, replacing normal actions
-- [ ] 2.4 Cancel reverts instantly with no request sent
-- [ ] 2.5 Confirm removes the card from the list and the deletion persists across reload
-- [ ] 2.6 Edit and Delete are mutually exclusive on the same card
-- [ ] 2.7 Network/timeout failure during Confirm keeps the card in confirmation state with a retryable error
-- [ ] 2.8 Deleting an already-removed card still clears it from the list with no error shown
+- [x] 2.3 Delete button shows inline Confirm/Cancel, replacing normal actions
+- [x] 2.4 Cancel reverts instantly with no request sent
+- [x] 2.5 Confirm removes the card from the list and the deletion persists across reload
+- [x] 2.6 Edit and Delete are mutually exclusive on the same card
+- [x] 2.7 Network/timeout failure during Confirm keeps the card in confirmation state with a retryable error
+- [x] 2.8 Deleting an already-removed card still clears it from the list with no error shown

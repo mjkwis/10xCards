@@ -9,9 +9,18 @@ interface FlashcardsListProps {
   onRetry: () => void;
   onUpdated: (flashcard: Flashcard) => void;
   onNotFound: (id: string) => void;
+  onDeleted: (id: string) => void;
 }
 
-export function FlashcardsList({ flashcards, state, error, onRetry, onUpdated, onNotFound }: FlashcardsListProps) {
+export function FlashcardsList({
+  flashcards,
+  state,
+  error,
+  onRetry,
+  onUpdated,
+  onNotFound,
+  onDeleted,
+}: FlashcardsListProps) {
   if (state === "loading" && flashcards.length === 0) {
     return <p className="text-sm text-blue-100/70">Loading your flashcards…</p>;
   }
@@ -31,7 +40,13 @@ export function FlashcardsList({ flashcards, state, error, onRetry, onUpdated, o
   return (
     <div className="space-y-3">
       {flashcards.map((flashcard) => (
-        <FlashcardListItem key={flashcard.id} flashcard={flashcard} onUpdated={onUpdated} onNotFound={onNotFound} />
+        <FlashcardListItem
+          key={flashcard.id}
+          flashcard={flashcard}
+          onUpdated={onUpdated}
+          onNotFound={onNotFound}
+          onDeleted={onDeleted}
+        />
       ))}
     </div>
   );
